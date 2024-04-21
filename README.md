@@ -53,10 +53,10 @@ Health care specialists will be listed with;-
 
 
 # How to run the backend
-1. Without Docker 
+## 1. Without Docker 
 It is assumed that you have Python installed on your computer, if not, download it here <link>https://www.python.org/downloads/</link>
 
-### Create a project directory & a virtual environment
+#### Creating project directory
 To create a project directory, 
 ```sql
 mkdir WeCareBackend
@@ -65,7 +65,7 @@ Then Change directory in the project directory
 ```sql
 cd WeCareBackend
 ```
-
+#### Creating virtual environment
 Then create a virtual environment
 ```sql
 python3 -m venv venv
@@ -75,7 +75,7 @@ Then, Activate the virtual environment
 source venv/bin/activate
 ```
 
-After that,
+#### Cloning the project
 Clone the repository from github
 ```sql
 git clone git@github.com:ndambopaul/WeCare-API.git
@@ -85,6 +85,7 @@ or
 git clone https://github.com/ndambopaul/WeCare-API.git
 ```
 
+#### Running the project 
 After that, change directory to the repository cloned
 ```sql
 cd WeCare-API
