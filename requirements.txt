@@ -1,0 +1,9 @@
+django
+djangorestframework
+django-cors-headers
+black
+drf-yasg
+gunicorn
+psycopg2-binary
+celery
+whitenoise
