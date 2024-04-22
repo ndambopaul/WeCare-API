@@ -15,10 +15,33 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import permissions
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="WeCare API",
+      default_version='v1',
+      description="This is the Backend service that will power the WeCare platform",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="paulkadabo@gmail.com"),
+      license=openapi.License(name="MIT License"),
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/", include("apps.users.urls")),
+    path("specialists/", include("apps.specialists.urls")),
+    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

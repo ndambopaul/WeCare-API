@@ -6,11 +6,15 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from apps.users.serializers import RegisterUserSerializer, LoginUserSerializer, UserActivationSerializer, ChangePasswordSerializer, ForgotPasswordSerializer
+from apps.users.serializers import RegisterUserSerializer, UusersListSerializer, LoginUserSerializer, UserActivationSerializer, ChangePasswordSerializer, ForgotPasswordSerializer
 
 from apps.users.models import User
 
 # Create your views here.
+class UsersListAPIView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UusersListSerializer
+
 class RegisterUserAPIView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterUserSerializer
@@ -104,14 +108,15 @@ class UserActivationAPIView(APIView):
         AllowAny,
     ]
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, token, *args, **kwargs):
         data = request.data
+        
+        #serializer = self.serializer_class(data=data)
 
-        serializer = self.serializer_class(data=data)
-
-        if serializer.is_valid(raise_exception=True):
-            user = User.objects.get(token=data["token"])
+        #if serializer.is_valid(raise_exception=True):
+        user = User.objects.filter(token=token).first()
+        if user:
             user.is_active = True
             user.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": "User activated successfully"}, status=status.HTTP_201_CREATED)
+        return Response({"error": "Invalid Token"}, status=status.HTTP_404_NOT_FOUND)

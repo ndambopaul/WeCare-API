@@ -10,7 +10,12 @@ from apps.core.validators import check_valid_password
 from apps.users.models import User
 from apps.users.utils import generate_unique_key
 
+class UusersListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
 
+        extra_kwargs = {"password": {"write_only": True}}
 
 class RegisterUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,7 +57,6 @@ class LoginUserSerializer(AuthTokenSerializer):
         
         attrs["user"] = user
         return attrs
-
 
 
 
