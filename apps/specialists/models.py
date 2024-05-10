@@ -20,6 +20,17 @@ class Specialist(AbstractBaseModel):
         return self.user.username
     
 
+class SpecialistExperience(AbstractBaseModel):
+    employer_name = models.CharField(max_length=255)
+    position = models.CharField(max_length=255)
+    start_date = models.DateField()
+    end_date = models.DateField(null=True)
+    works_here = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.employer_name
+    
+
 class SpecialistEducation(AbstractBaseModel):
     specialist = models.ForeignKey(Specialist, on_delete=models.CASCADE)
     education_level = models.CharField(max_length=255, choices=EDUCATION_LEVELS)
