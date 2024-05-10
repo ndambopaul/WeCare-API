@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from apps.specialists.models import Specialist
+from apps.specialists.models import Specialist, SpecialistEducation, SpecialistExperience
 from apps.users.models import User
 
 
@@ -21,6 +21,8 @@ class CreateSpecialistSerializer(serializers.Serializer):
     county = serializers.CharField(max_length=255)
     country = serializers.CharField(max_length=255)
     profile_photo = serializers.FileField()
+    education = serializers.JSONField(default=list)
+    experience = serializers.JSONField(default=list)
 
     def create(self, validated_data):
         user = User.objects.create(
@@ -40,11 +42,24 @@ class CreateSpecialistSerializer(serializers.Serializer):
         )
         user.set_password(validated_data.get('password'))
         user.save()
-        Specialist.objects.create(
+        specialist = Specialist.objects.create(
             user=user, 
             specialization=validated_data.get("specialization"),
             hourly_rate=validated_data.get("hourly_rate")
         )
+        education_list = []
+        experience_list = []
+
+        for education in validated_data.get("education"):
+            education_list.append(SpecialistEducation(specialist=specialist, **education))
+        
+        SpecialistEducation.objects.bulk_create(education_list)
+
+        for experience in validated_data.get("experience"):
+            experience_list.append(SpecialistExperience(specialist=specialist, **experience))
+
+        SpecialistExperience.objects.bulk_create(experience_list)
+
         return user
 
 class SpecialistSerializer(serializers.ModelSerializer):
